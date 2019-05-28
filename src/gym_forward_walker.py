@@ -106,9 +106,12 @@ class RoboschoolForwardWalker(SharedMemoryClientEnv):
         feet_collision_cost = 0.0
         for i,f in enumerate(self.feet):
             contact_names = set(x.name for x in f.contact_list())
-            #print("CONTACT OF '%s' WITH %s" % (f.name, ",".join(contact_names)) )
-            self.feet_contact[i] = 1.0 if (self.foot_ground_object_names & contact_names) else 0.0
-            if contact_names - self.foot_ground_object_names:
+            if any( map(lambda x: x.startswith("top_step"), contact_names)):
+                self.feet_contact[i] = 1.0
+            else:
+                self.feet_contact[i] = 1.0 if (self.foot_ground_object_names & contact_names) else 0.0
+            #print("CONTACT OF '%s' WITH %s : %f" % (f.name, ",".join(contact_names), self.feet_contact[i]) )
+            if not all(map(lambda x: x.startswith("top_step"), contact_names - self.foot_ground_object_names)):
                 feet_collision_cost += self.foot_collision_cost
 
         electricity_cost  = self.electricity_cost  * float(np.abs(a*self.joint_speeds).mean())  # let's assume we have DC motor with controller, and reverse current braking
