@@ -1,5 +1,20 @@
 <mujoco model="ground_plane">
   <worldbody>
     <geom conaffinity="1" condim="3" name="floor" friction="0.8 0.1 0.1" pos="0 0 0" type="plane"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.0   0 1.0  0" pos="8  0 0.01" size="2.48 0.01" name="top_step-0-0"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.0   0 1.0  0" pos="16  0 0.02" size="2.48 0.02" name="top_step-1-0"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.16666666666666666   0 0.8333333333333333  0" pos="16  0 0.06" size="2.1500000000000004 0.02" name="top_step-1-1"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.0   0 1.0  0" pos="24  0 0.03" size="2.48 0.03" name="top_step-2-0"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.16666666666666666   0 0.8333333333333333  0" pos="24  0 0.09" size="2.1500000000000004 0.03" name="top_step-2-1"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.3333333333333333   0 0.6666666666666666  0" pos="24  0 0.15" size="1.82 0.03" name="top_step-2-2"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.0   0 1.0  0" pos="32  0 0.04" size="2.48 0.04" name="top_step-3-0"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.16666666666666666   0 0.8333333333333333  0" pos="32  0 0.12" size="2.1500000000000004 0.04" name="top_step-3-1"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.3333333333333333   0 0.6666666666666666  0" pos="32  0 0.2" size="1.82 0.04" name="top_step-3-2"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.5   0 0.5  0" pos="32  0 0.28" size="1.49 0.04" name="top_step-3-3"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.0   0 1.0  0" pos="40  0 0.05" size="2.48 0.05" name="top_step-4-0"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.16666666666666666   0 0.8333333333333333  0" pos="40  0 0.15000000000000002" size="2.1500000000000004 0.05" name="top_step-4-1"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.3333333333333333   0 0.6666666666666666  0" pos="40  0 0.25" size="1.82 0.05" name="top_step-4-2"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.5   0 0.5  0" pos="40  0 0.35000000000000003" size="1.49 0.05" name="top_step-4-3"/>
+<geom type="cylinder" conaffinity="1" condim="3" friction="0.8 0.8 0.8" rgba="0.6666666666666666   0 0.3333333333333333  0" pos="40  0 0.45" size="1.1600000000000001 0.05" name="top_step-4-4"/>
   </worldbody>
 </mujoco>
