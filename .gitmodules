@@ -1,0 +1,3 @@
+[submodule "roboschool"]
+	path = roboschool
+	url = git@github.com:hadrava/evolution-stairs.git
