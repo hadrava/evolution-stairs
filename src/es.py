@@ -16,6 +16,9 @@ class HumanoidPolicy(object):
         ])
         self.model = model
 
+    def create_new(self):
+        return HumanoidPolicy()
+
     def get_weights(self):
         return self.model.get_weights()
 
@@ -27,7 +30,8 @@ class HumanoidPolicy(object):
         action = self.model(input_data, training = False)
         return action[0].numpy()
 
-    def run_policy_in_env(self, env):
+    def run_policy_in_env(self, env, run_seed):
+        env.seed(run_seed)
         obs = env.reset()
 
         score = 0
@@ -75,28 +79,13 @@ def mutation(population):
         population[i+1] = one_mutation(policy)
     return population
 
-def one_croosover(first, second):
-    if np.random.rand() < CROSSOVER_PROB:
-        gamma = np.random.rand()
-        new_first_weights = []
-        new_second_weights = []
-        for first_weights, second_weights in zip(first.get_weights(), second.get_weights()):
-            if np.random.rand() < CROSSOVER_LAYER_PROB:
-                mutate_weights = np.random.rand(*first_weights.shape) < CROSSOVER_WEIGHT_PROB
-                new_first_weights.append(np.where(mutate_weights, (1-gamma)*first_weights + (gamma * second_weights), first_weights))
-                new_second_weights.append(np.where(mutate_weights, gamma*first_weights + ((1-gamma) * second_weights), second_weights))
-            else:
-                new_first_weights.append(first_weights)
-                new_second_weights.append(second_weights)
-        first, second = HumanoidPolicy(), HumanoidPolicy()
-        first.set_weights(new_first_weights)
-        second.set_weights(new_second_weights)
-    return first, second
+import crossovers
+one_crossover = crossovers.move_per_layer
 
 def crossover(population):
     for i in range(1, (POPULATION_SIZE+1) // 2):
         k = 2*i
-        first , second = one_croosover(population[k-1], population[k])
+        first , second = one_crossover(population[k-1], population[k])
         population[k-1], population[k] = first, second
     return population
 
@@ -107,9 +96,6 @@ env_render = gym.make("RoboschoolHumanoid-v1")
 
 POPULATION_SIZE = 11
 EPOCH_COUNT = 100
-CROSSOVER_WEIGHT_PROB = 0.01
-CROSSOVER_PROB = 0.3
-CROSSOVER_LAYER_PROB = 0.3
 MUTATION_WEIGHT_PROB = 0.01
 MUTATION_PROB = 0.3
 MUTATION_LAYER_PROB = 0.3
@@ -127,15 +113,19 @@ for policy in population:
         new_weights.append(random *0.3*0 + pretrain)
     policy.set_weights(new_weights)
 
+import random
+import sys
 for epoch in range(EPOCH_COUNT):
     rewards = []
     max_reward = -1e10
+    run_seed = random.randrange(sys.maxsize)
+
     index = 0
     for i, policy in enumerate(population):
-        rewards.append(policy.run_policy_in_env(env_render if i == 0 and epoch % 1 == 0 else env))
+        rewards.append(policy.run_policy_in_env(env_render if i == 0 and epoch % 1 == 0 else env, run_seed=run_seed))
         if rewards[-1] > max_reward:
             max_reward, index = rewards[-1], i
-    env_render.render("human")
+    #env_render.render("human")
 
     population = tournament_sel(population, rewards, index)
     population = mutation(population)
