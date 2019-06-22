@@ -46,8 +46,8 @@ if __name__ == "__main__":
     import sys
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mutation',  type=str, choices=[i for i in mutations. MUTATIONS],  default="normal", help='Select mutation kind')
-    parser.add_argument('--crossover', type=str, choices=[i for i in crossovers.CROSSOVERS], default="onepoint", help='Select crossover kind')
+    parser.add_argument('-m', '--mutation',  type=str, choices=[i for i in mutations. MUTATIONS],  default="normal", help='Select mutation kind')
+    parser.add_argument('-c', '--crossover', type=str, choices=[i for i in crossovers.CROSSOVERS], default="onepoint", help='Select crossover kind')
 
     parser.add_argument('-cp',  '--crossover_prob',         type=float, default=0.30)
     parser.add_argument('-clp', '--crossover_layer_prob',   type=float, default=0.30)
@@ -93,6 +93,8 @@ if __name__ == "__main__":
 
     env = gym.make("RoboschoolWalker2d-v1")
     population = [policies.WalkerPolicy() for _ in range(POPULATION_SIZE)]
+    out_weights = "walker_best_weights"
+    out_path = "walker_rewards.csv"
 
     from default_weights_2d import default_weights
 
@@ -109,12 +111,13 @@ if __name__ == "__main__":
             new_weights.append(geterated * 0.3 + pretrain)
         policy.set_weights(new_weights)
 
-
-
-    out_path = "walker_rewards.csv"
     if os.path.isdir(args.logdir): out_path = os.path.join(args.logdir, out_path)
     with open(out_path, "w", encoding="utf-8") as out_file:
         for epoch in range(EPOCH_COUNT):
+            if epoch > 0:
+                population = tournament_sel(population, rewards, index)
+                population = crossover(population)
+                population = mutation(population)
             rewards = [0 for _ in population]
             max_reward = -1e10
 
@@ -123,16 +126,18 @@ if __name__ == "__main__":
                 run_seed = random.randrange(sys.maxsize)
                 for i, policy in enumerate(population):
                     rewards[i] += policy.run_policy_in_env(env, run_seed=run_seed)
-                    if rewards[-1] > max_reward:
-                        max_reward, index = rewards[-1], i
+                    if rewards[i] > max_reward:
+                        max_reward, index = rewards[i], i
 
-            out_weights = "walker_weights.csv"
-            if os.path.isdir(args.logdir): out_weights = os.path.join(args.logdir, out_weights)
-            population[index].save_weights(out_weights)
-
-            population = tournament_sel(population, rewards, index)
-            population = crossover(population)
-            population = mutation(population)
+            if epoch % 10 == 0:
+                out_epoch_weights = out_weights + "e-{}".format(epoch)
+                if os.path.isdir(args.logdir): out_weights = os.path.join(args.logdir, out_epoch_weights)
+                population[index].save_weights(out_epoch_weights)
 
             print("Epoch = %4i:" % epoch, max_reward)
             print(";".join(str(r) for r in rewards), file=out_file)
+
+    for i, policy in enumerate(population):
+        out_policy_weights = out_weights + "p-{}".format(i)
+        if os.path.isdir(args.logdir): out_weights = os.path.join(args.logdir, out_policy_weights)
+        policy.save_weights(out_policy_weights)
