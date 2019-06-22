@@ -4,7 +4,7 @@ CROSSOVER_WEIGHT_PROB = 0.01
 CROSSOVER_PROB = 0.3
 CROSSOVER_LAYER_PROB = 0.3
 
-def move_per_layer(first, second):
+def linearmove_per_layer(first, second):
     if np.random.rand() < CROSSOVER_PROB:
         gamma = np.random.rand()
         new_first_weights = []
@@ -87,3 +87,11 @@ def twopoint(first, second):
         first.set_weights(new_first_weights)
         second.set_weights(new_second_weights)
     return first, second
+
+CROSSOVERS = {
+    "linearmove_per_layer": linearmove_per_layer,
+    "onepoint_per_layer": onepoint_per_layer,
+    "twopoint_per_layer": twopoint_per_layer,
+    "onepoint": onepoint,
+    "twopoint": twopoint,
+              }
