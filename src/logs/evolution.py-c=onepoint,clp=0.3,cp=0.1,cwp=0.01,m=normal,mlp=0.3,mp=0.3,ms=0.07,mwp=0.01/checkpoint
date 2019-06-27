@@ -1,0 +1,2 @@
+model_checkpoint_path: "walker_best_weightsp-10"
+all_model_checkpoint_paths: "walker_best_weightsp-10"

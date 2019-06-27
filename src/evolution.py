@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
             if epoch % 10 == 0:
                 out_epoch_weights = out_weights + "e-{}".format(epoch)
-                if os.path.isdir(args.logdir): out_weights = os.path.join(args.logdir, out_epoch_weights)
+                if os.path.isdir(args.logdir): out_epoch_weights = os.path.join(args.logdir, out_epoch_weights)
                 population[index].save_weights(out_epoch_weights)
 
             print("Epoch = %4i:" % epoch, max_reward)
@@ -139,5 +139,5 @@ if __name__ == "__main__":
 
     for i, policy in enumerate(population):
         out_policy_weights = out_weights + "p-{}".format(i)
-        if os.path.isdir(args.logdir): out_weights = os.path.join(args.logdir, out_policy_weights)
+        if os.path.isdir(args.logdir): out_policy_weights = os.path.join(args.logdir, out_policy_weights)
         policy.save_weights(out_policy_weights)

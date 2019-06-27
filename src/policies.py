@@ -147,7 +147,7 @@ class WalkerPolicy(object):
         self.memory = output[-10:]
         return output[:-10]
 
-    def run_policy_in_env(self, env, run_seed):
+    def run_policy_in_env(self, env, run_seed, render=False):
         env.seed(run_seed)
         self.restart_simulation()
         obs = env.reset()
@@ -159,7 +159,8 @@ class WalkerPolicy(object):
             action = self.act(obs)
 
             obs, reward, done, _ = env.step(action)
-            #env.render("human")
+            if render:
+              env.render("human")
 
             score += reward
             frame += 1
